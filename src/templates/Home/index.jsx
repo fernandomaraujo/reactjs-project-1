@@ -5,6 +5,7 @@ import './styles.css';
 import { loadPosts } from '../../utils/load-post';
 import { Posts } from '../../components/Posts';
 import { Button } from '../../components/Button';
+import { TextInput } from '../../components/TextInput';
 
 export class Home extends Component {
   
@@ -12,7 +13,8 @@ export class Home extends Component {
     posts: [],
     allPosts: [],
     page: 0,
-    postsPerPage: 10
+    postsPerPage: 10,
+    searchValue: ''
   };
   
   async componentDidMount() {
@@ -49,21 +51,70 @@ export class Home extends Component {
 
   }
 
+  handleChange = (e) => {
+    const {value} = e.target;
+
+    this.setState({ searchValue: value });
+  }
+
   render() {
 
-    const { posts, page, postsPerPage, allPosts } = this.state;
+    const { posts, page, postsPerPage, allPosts, searchValue } = this.state;
     const noMorePosts = page + postsPerPage >= allPosts.length;
 
+    {/* Operação condicional ternário */}
+    {/* Se tem valor, filtra os posts, caso não retorna posts normal*/}
+    const filteredPosts = !!searchValue ? 
+    
+    allPosts.filter(post => {
+
+      return post.title.toLowerCase()
+        .includes(searchValue.toLocaleLowerCase());
+
+    })
+    : posts;
+
+    {/* O que está sendo exibido */}
     return (
       <section className="container">
-        <Posts posts={posts} />
 
-        <div class="button-container">
-          <Button 
-            text="Load more posts"
-            onClick={this.loadMorePosts}
-            disabled={noMorePosts} 
+        <div className="search-container">
+
+          {/* Avaliação de Curto-Circuito */}
+          {!!searchValue && (
+            <>
+            <h1>Search value: {searchValue}</h1>
+            </>
+          )}
+
+          <TextInput 
+            searchValue={searchValue}
+            handleChange={this.handleChange}
           />
+
+        </div>
+
+        {/* Se tiver posts filtrados, exibe */}
+        {filteredPosts.length > 0 && (
+          <Posts posts={filteredPosts} />
+        )}
+
+        {/* Caso contrário */}
+        {filteredPosts.length === 0 && (
+          <p className="without-posts">Não existem posts.</p>
+        )}
+
+        <div className="button-container">
+
+          {/* Se não estiver numa busca, exibir botão */}
+          {!searchValue && (
+            <Button 
+              text="Load more posts"
+              onClick={this.loadMorePosts}
+              disabled={noMorePosts} 
+            />
+          )}
+          
         </div>
 
       </section>
