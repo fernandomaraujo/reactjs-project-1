@@ -62,8 +62,8 @@ export class Home extends Component {
     const { posts, page, postsPerPage, allPosts, searchValue } = this.state;
     const noMorePosts = page + postsPerPage >= allPosts.length;
 
-    {/* Operação condicional ternário */}
-    {/* Se tem valor, filtra os posts, caso não retorna posts normal*/}
+    // Operação condicional ternário
+    // Se tem valor, filtra os posts, caso não retorna posts normal
     const filteredPosts = !!searchValue ? 
     
     allPosts.filter(post => {
@@ -74,7 +74,7 @@ export class Home extends Component {
     })
     : posts;
 
-    {/* O que está sendo exibido */}
+    // O que está sendo exibido 
     return (
       <section className="container">
 
